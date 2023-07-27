@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "core/camera.h"
 
 #include <iostream>
 
@@ -20,6 +21,8 @@ const unsigned int SCR_HEIGHT = 600;
 // arcball control
 double last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
 bool arcball_on = false;
+// camera setting
+Camera camera(glm::vec3(0.0f, 0.0f, -3.0f));
 
 int main()
 {
@@ -178,10 +181,10 @@ int main()
 
     // create transformations
     glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    glm::mat4 view          = glm::mat4(1.0f);
+    glm::mat4 view          = camera.get_view_matrix();
     glm::mat4 projection    = glm::mat4(1.0f);
 //        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));
-    view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+//    view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 
@@ -207,20 +210,14 @@ int main()
         // activate shader
         ourShader.use();
 
-
         if (arcball_on && (cur_mx != last_mx || cur_my != last_my)){
             glm::vec3 va = get_arcball_vector(last_mx, last_my);
             glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
-            float angle = acos(fmin(1.0f, glm::dot(va, vb)));
-            angle *= 0.05;
-            glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
-            glm::mat3 camera2object = glm::inverse(glm::mat3(view) * glm::mat3(model));
-            glm::vec3 axis_in_object_coord = camera2object * axis_in_camera_coord;
-            model = glm::rotate(model, glm::degrees(angle), axis_in_object_coord);
+            camera.arcball_rotate(vb, va);
+            view = camera.get_view_matrix();
             last_mx = cur_mx;
             last_my = cur_my;
         }
-
 
         // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         ourShader.setMat4("model", model);
@@ -320,15 +317,5 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
         cur_mx = xpos;
         cur_my = ypos;
     }
-//    if (arcball_on && (cur_mx != last_mx || cur_my != last_my)){
-//        glm::vec3 va = get_arcball_vector(last_mx, last_my);
-//        glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
-//        float angle = acos(fmin(1.0f, glm::dot(va, vb)));
-//        glm::vec3 axis_in_camera_coord = glm::cross(va, vb);
-//        glm::mat3 camera2object = glm::inverse(glm::mat3(transforms[MODE_CAMERA]) * glm::mat3(mesh.object2world));
-//        glm::vec3 axis_in_object_coord = camera2object * axis_in_camera_coord;
-//        mesh.object2world = glm::rotate(mesh.object2world, glm::degrees(angle), axis_in_object_coord);
-//        last_mx = cur_mx;
-//        last_my = cur_my;
-//    }
+
 }

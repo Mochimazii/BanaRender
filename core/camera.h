@@ -7,6 +7,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "macro.h"
 
 class Camera {
 public:
@@ -16,9 +17,16 @@ public:
 
     Camera(glm::vec3 eye,
            glm::vec3 target = glm::vec3(0, 0, 0),
-           glm::vec3 upVec = glm::vec3(0, 1, 0)):eye(eye),target(target),upVec(upVec){}
+           glm::vec3 upVec = glm::vec3(0, 1, 0)):
+           eye(eye),
+           target(target),
+           upVec(upVec){};
 
-    glm::vec3 get_arcball_vector(double x, double y);
+    glm::mat4 get_view_matrix();
+    void arcball_rotate(glm::vec3 va, glm::vec3 vb);
+    void restricted_rotate(float x_offset, float y_offset);
+private:
+    void updateCameraAttr();
 };
 
 

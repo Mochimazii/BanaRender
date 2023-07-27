@@ -19,11 +19,7 @@ add_library(render_lib ${GLAD_C}
         ${IMAGE_IO}
         )
 
-add_executable(BanaRender main.cpp
-#        ${GLAD_C}
-#        ${CORE_FILE}
-#        ${IMAGE_IO}
-        )
+add_executable(BanaRender main.cpp)
 
 target_link_libraries(BanaRender render_lib)
 
