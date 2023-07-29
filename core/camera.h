@@ -20,10 +20,12 @@ public:
            glm::vec3 upVec = glm::vec3(0, 1, 0)):
            eye(eye),
            target(target),
-           upVec(upVec){};
+           upVec(upVec){
+        this->updateCameraAttr();
+    };
 
     glm::mat4 get_view_matrix();
-    void arcball_rotate(glm::vec3 va, glm::vec3 vb);
+    void arcball_rotate(glm::vec3 vStart, glm::vec3 vEnd);
     void restricted_rotate(float x_offset, float y_offset);
 private:
     void updateCameraAttr();

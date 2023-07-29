@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-void button_callback(GLFWwindow *window, int button, int action, int mods);
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -19,10 +19,10 @@ glm::vec3 get_arcball_vector(double x, double y);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 // arcball control
+bool rotate_on = false;
 double last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
-bool arcball_on = false;
 // camera setting
-Camera camera(glm::vec3(0.0f, 0.0f, -3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 int main()
 {
@@ -44,7 +44,7 @@ int main()
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetMouseButtonCallback(window, button_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
 
     // glad: load all OpenGL function pointers
@@ -210,9 +210,10 @@ int main()
         // activate shader
         ourShader.use();
 
-        if (arcball_on && (cur_mx != last_mx || cur_my != last_my)){
+        if (rotate_on && (cur_mx != last_mx || cur_my != last_my)){
             glm::vec3 va = get_arcball_vector(last_mx, last_my);
             glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
+            //camera.restricted_rotate((last_mx - cur_mx)/SCR_WIDTH, (last_my - cur_my)/SCR_HEIGHT);
             camera.arcball_rotate(vb, va);
             view = camera.get_view_matrix();
             last_mx = cur_mx;
@@ -263,7 +264,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 // glfw: whenever the mouse moves, this callback is called
 // -------------------------------------------------------
-void button_callback(GLFWwindow *window, int button, int action, int mods){
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
     switch (action) {
         case GLFW_PRESS:
         {
@@ -271,7 +272,7 @@ void button_callback(GLFWwindow *window, int button, int action, int mods){
             {
                 case GLFW_MOUSE_BUTTON_LEFT:
                     std::cout << "arcball on" << std::endl;
-                    arcball_on = true;
+                    rotate_on = true;
                     break;
             }
             double xpos, ypos;
@@ -285,7 +286,7 @@ void button_callback(GLFWwindow *window, int button, int action, int mods){
             switch (button) {
                 case GLFW_MOUSE_BUTTON_LEFT:
                     std::cout << "arcball false" << std::endl;
-                    arcball_on = false;
+                    rotate_on = false;
                     break;
             }
             break;
@@ -294,17 +295,22 @@ void button_callback(GLFWwindow *window, int button, int action, int mods){
             break;
     }
 }
-
+/**
+ * 获取虚拟球中心点 O 到虚拟球表面上的点 P 的归一化向量
+ * @param x 屏幕坐标 x
+ * @param y 屏幕坐标 y
+ * @return  向量 OP
+ */
 glm::vec3 get_arcball_vector(double x, double y) {
     glm::vec3 P = glm::vec3(1.0*x/SCR_WIDTH*2 - 1.0,
                             1.0*y/SCR_HEIGHT*2 - 1.0,
                             0);
-    P.y = -P.y;
+    P.y = -P.y;     // 屏幕坐标原点在左上角, y 轴从上向下递增, 与 NDC 空间相反
     float OP_squared = P.x * P.x + P.y * P.y;
     if (OP_squared <= 1*1)
-        P.z = sqrt(1*1 - OP_squared);  // Pythagoras
+        P.z = sqrt(1*1 - OP_squared);
     else
-        P = glm::normalize(P);  // nearest point
+        P = glm::normalize(P);  // 如果 (x,y) 距离球体太远，则返回虚拟球表面上最近的点
     return P;
 }
 
@@ -313,7 +319,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
-    if (arcball_on){
+    if (rotate_on){
         cur_mx = xpos;
         cur_my = ypos;
     }
