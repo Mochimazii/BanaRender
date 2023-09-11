@@ -12,7 +12,7 @@ Primitive::Primitive(GLuint vao, int type, int count, int componentType, int off
 void Primitive::draw() {
     GL_CHECK(glBindVertexArray(_vao));
     if (_offset >= 0) {
-        GL_CHECK(glDrawElements(_mode, _count, _componentType, (void *) _offset));
+        GL_CHECK(glDrawElements(_mode, _count, _componentType, reinterpret_cast<void *>(_offset)));
     } else {
         GL_CHECK(glDrawArrays(_mode, 0, _count))
     }

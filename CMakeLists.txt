@@ -13,9 +13,9 @@ set(GLAD_C ${PROJECT_SOURCE_DIR}/src/glad.c)
 file (GLOB CORE_FILE core/* )
 
 # image IO
-file(GLOB IMAGE_IO
-        include/stb_image/*.h
-        include/stb_image/*.cpp)
+#file(GLOB IMAGE_IO
+#        include/stb_image/*.h
+#        include/stb_image/*.cpp)
 
 # tinygltf
 file(GLOB TINYGLTF
@@ -24,7 +24,6 @@ file(GLOB TINYGLTF
 
 add_library(render_lib ${GLAD_C}
         ${CORE_FILE}
-        ${IMAGE_IO}
         ${TINYGLTF}
 )
 
@@ -37,6 +36,7 @@ target_link_libraries(test render_lib)
 # GLFW
 find_package(glfw3 3.3 REQUIRED)
 target_link_libraries(BanaRender glfw)
+target_link_libraries(test glfw)
 
 #  GLM
 find_package(GLM)
