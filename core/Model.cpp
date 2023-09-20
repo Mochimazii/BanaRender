@@ -59,7 +59,7 @@ std::vector<GLuint> Model::buildBuffers(const tinygltf::Model &model) {
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, model.buffers[i].data.size(),
                               model.buffers[i].data.data(), GL_STATIC_DRAW));
     }
-    return std::vector<GLuint>();
+    return buffers;
 }
 
 std::vector<GLuint> Model::buildTextures(const tinygltf::Model &model) {

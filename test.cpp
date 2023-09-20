@@ -5,8 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "core/camera.h"
-#include "tinygltf/tiny_gltf.h"
-
+#include "core/Model.h"
 #include <iostream>
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
@@ -60,6 +59,8 @@ int main()
     // ------------------------------------
     Shader ourShader("../shader/texture.vert", "../shader/texture.frag");
 
+    // Model
+    bana::Model gltf_model("../assets/Fox/Fox.gltf");
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
     float vertices[] = {
@@ -180,7 +181,7 @@ int main()
     ourShader.setInt("texture2", 1);
 
     // create transformations
-    glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    glm::mat4 model        = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
     glm::mat4 view          = camera.get_view_matrix();
     glm::mat4 projection    = glm::mat4(1.0f);
 //        model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));

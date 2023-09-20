@@ -7,37 +7,61 @@ add_definitions(-DSTB_IMAGE_IMPLEMENTATION)
 add_definitions(-DSTB_IMAGE_WRITE_IMPLEMENTATION)
 
 # GLAD
-include_directories(${PROJECT_SOURCE_DIR}/include)
 set(GLAD_C ${PROJECT_SOURCE_DIR}/src/glad.c)
 
 file (GLOB CORE_FILE core/* )
 
-# image IO
-#file(GLOB IMAGE_IO
-#        include/stb_image/*.h
-#        include/stb_image/*.cpp)
-
 # tinygltf
-file(GLOB TINYGLTF
-        include/tinygltf/*.h
-        include/tinygltf/*.hpp)
-
-add_library(render_lib ${GLAD_C}
-        ${CORE_FILE}
-        ${TINYGLTF}
-)
-
-add_executable(BanaRender main.cpp)
-target_link_libraries(BanaRender render_lib)
-
-add_executable(test test.cpp)
-target_link_libraries(test render_lib)
+#file(GLOB TINYGLTF
+#        include/tinygltf/*.h
+#        include/tinygltf/*.hpp)
 
 # GLFW
 find_package(glfw3 3.3 REQUIRED)
-target_link_libraries(BanaRender glfw)
-target_link_libraries(test glfw)
 
 #  GLM
 find_package(GLM)
-include_directories(${GLM_INCLUDE_DIRS})
+include_directories(
+        ${GLM_INCLUDE_DIRS}
+        ${PROJECT_SOURCE_DIR}/include
+)
+
+# tinygltf
+set(TINYGLTF_HEADER_ONLY ON CACHE INTERNAL "" FORCE)
+set(TINYGLTF_INSTALL OFF CACHE INTERNAL "" FORCE)
+add_subdirectory(include/tinygltf)
+# tinygltf
+#file(GLOB TINYGLTF
+#        include/tinygltf/*.h
+#        include/tinygltf/*.hpp)
+#add_library(tinygltf INTERFACE IMPORTED)
+#target_include_directories(tinygltf INTERFACE include/tinygltf)
+# 再改下Cmake头文件和.cpp文件的路径分开
+add_library(render_lib SHARED
+        ${GLAD_C}
+        ${CORE_FILE}
+)
+
+target_link_libraries(render_lib PUBLIC
+        glfw
+        tinygltf
+)
+
+target_include_directories(render_lib PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+)
+#target_link_libraries(render_lib PUBLIC
+#        tinygltf
+#)
+
+add_executable(BanaRender main.cpp)
+target_link_libraries(BanaRender PUBLIC
+        render_lib
+        tinygltf
+)
+
+add_executable(test test.cpp)
+target_link_libraries(test PUBLIC
+        render_lib
+        tinygltf
+)

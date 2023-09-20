@@ -38,7 +38,7 @@ private:
                                               const std::vector<GLuint> &buffers,
                                               const std::vector<GLuint> &textures);
 public:
-    explicit Model(const std::string &path);
+    Model(const std::string &path);
     void init();
 };
 
