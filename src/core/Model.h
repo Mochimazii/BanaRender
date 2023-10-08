@@ -7,17 +7,26 @@
 
 #include "Scene.h"
 #include <string>
-//#include <tiny_gltf.h>
-#include "tinygltf/tiny_gltf.h"
+#include "shader.h"
+#include <tiny_gltf.h>
 #include <vector>
 
 namespace bana {
 
 class Model {
+
+public:
+    Model(const std::string &path);
+    void init();
+    void drawCall();
+    const std::vector<std::shared_ptr<Scene>> &GetScenes() const;
 private:
     tinygltf::Model _model;
-    std::vector<std::shared_ptr<Scene>> _scenes;
+    bool _initialized = false;
     std::vector<std::pair<std::string, GLuint>> preDefinedAttributes;
+    std::shared_ptr<Shader> _shader;
+    std::vector<std::shared_ptr<Scene>> _scenes;
+private:
     void loadGLTF(const std::string &path);
     void buildScenes();
     std::shared_ptr<Scene> buildScene(unsigned int sceneIndex,
@@ -29,7 +38,6 @@ private:
                                     const std::vector<GLuint> &buffers,
                                     const std::vector<GLuint> &textures,
                                     std::shared_ptr<Node> parent = nullptr);
-
     std::shared_ptr<Mesh> buildMesh(unsigned int meshIndex,
                                     const std::vector<GLuint> &buffers,
                                     const std::vector<GLuint> &textures);
@@ -38,9 +46,6 @@ private:
                                               const std::vector<GLuint> &vaos,
                                               const std::vector<GLuint> &buffers,
                                               const std::vector<GLuint> &textures);
-public:
-    Model(const std::string &path);
-    void init();
 };
 
 } // bana

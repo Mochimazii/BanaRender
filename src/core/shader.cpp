@@ -108,7 +108,7 @@ void Shader::checkCompileErrors(GLuint shader, std::string type)
     }
 }
 
-void Shader::use() {
+void Shader::bind() {
     glUseProgram(this->program_id);
 }
 

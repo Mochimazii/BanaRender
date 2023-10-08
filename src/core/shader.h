@@ -21,7 +21,7 @@ class Shader {
 public:
     Shader() = default;
     Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometryPath = "");
-    void use();
+    void bind();
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;

@@ -8,7 +8,7 @@ Rasterized (without ray tracing or path tracing) by the [Khronos glTF Sample Vie
 
 ## Description
 
-This model demonstrates the use of the `KHR_materials_transmission` and `KHR_materials_volume` extensions to specify an object that appears to be made from colored glass.
+This model demonstrates the bind of the `KHR_materials_transmission` and `KHR_materials_volume` extensions to specify an object that appears to be made from colored glass.
 
 The "Attenuation" material on the dragon uses full transmission with a perfectly smooth, clear surface color.  The yellow and orange tones are produced by `KHR_material_volume`'s `attenuationColor` and `attenuationDistance`.
 
@@ -18,7 +18,7 @@ By default, glTF 2.0 and `KHR_materials_transmission` specify "thin-walled" mate
 
 However, `KHR_materials_volume` introduces the new parameters `thicknessFactor` and `thicknessTexture`.  When `thicknessFactor` is non-zero, the material definition changes from thin-walled to a thick volume.  The mesh's polygons are then considered to represent a manifold surface surrounding a solid three-dimensional volume of material.  This material produces refraction, as shown in the screenshot above where the view through the dragon distorts the checkerboard grid of the cloth behind it.
 
-For rasterizers that do not use ray tracing or path tracing, the product of `thicknessFactor` and `thicknessTexture` offer an average mesh thickness per texel along the surface.  This allows for example the dragon's thin claws to absorb less light and appear lighter yellow, while the dragon's thicker body appears a deeper orange.
+For rasterizers that do not bind ray tracing or path tracing, the product of `thicknessFactor` and `thicknessTexture` offer an average mesh thickness per texel along the surface.  This allows for example the dragon's thin claws to absorb less light and appear lighter yellow, while the dragon's thicker body appears a deeper orange.
 
 Because the `KHR_materials_ior` extension is not present, glTF's default IOR of 1.5 is used for the material.
 

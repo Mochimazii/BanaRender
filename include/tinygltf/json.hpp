@@ -1196,7 +1196,7 @@ inline bool operator<(const value_t lhs, const value_t rhs) noexcept
     JSON_HEDLEY_MSVC_VERSION_CHECK(14,0,0) || \
     JSON_HEDLEY_INTEL_CL_VERSION_CHECK(2021,1,0)
     #define JSON_HEDLEY_DEPRECATED(since) __declspec(deprecated("Since " # since))
-    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; use " #replacement))
+    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) __declspec(deprecated("Since " #since "; bind " #replacement))
 #elif \
     (JSON_HEDLEY_HAS_EXTENSION(attribute_deprecated_with_message) && !defined(JSON_HEDLEY_IAR_VERSION)) || \
     JSON_HEDLEY_GCC_VERSION_CHECK(4,5,0) || \
@@ -1211,10 +1211,10 @@ inline bool operator<(const value_t lhs, const value_t rhs) noexcept
     JSON_HEDLEY_TI_CLPRU_VERSION_CHECK(2,3,0) || \
     JSON_HEDLEY_MCST_LCC_VERSION_CHECK(1,25,10)
     #define JSON_HEDLEY_DEPRECATED(since) __attribute__((__deprecated__("Since " #since)))
-    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__("Since " #since "; use " #replacement)))
+    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) __attribute__((__deprecated__("Since " #since "; bind " #replacement)))
 #elif defined(__cplusplus) && (__cplusplus >= 201402L)
     #define JSON_HEDLEY_DEPRECATED(since) JSON_HEDLEY_DIAGNOSTIC_DISABLE_CPP98_COMPAT_WRAP_([[deprecated("Since " #since)]])
-    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) JSON_HEDLEY_DIAGNOSTIC_DISABLE_CPP98_COMPAT_WRAP_([[deprecated("Since " #since "; use " #replacement)]])
+    #define JSON_HEDLEY_DEPRECATED_FOR(since, replacement) JSON_HEDLEY_DIAGNOSTIC_DISABLE_CPP98_COMPAT_WRAP_([[deprecated("Since " #since "; bind " #replacement)]])
 #elif \
     JSON_HEDLEY_HAS_ATTRIBUTE(deprecated) || \
     JSON_HEDLEY_GCC_VERSION_CHECK(3,1,0) || \
@@ -2751,7 +2751,7 @@ Subclasses:
 - @ref other_error for exceptions indicating other library errors
 
 @internal
-@note To have nothrow-copy-constructible exceptions, we internally use
+@note To have nothrow-copy-constructible exceptions, we internally bind
       `std::runtime_error` which can cope with arbitrary-length error messages.
       Intermediate strings are built with static functions and then passed to
       the actual constructor.
@@ -2964,9 +2964,9 @@ json.exception.invalid_iterator.203 | iterators do not fit current value | Eithe
 json.exception.invalid_iterator.204 | iterators out of range | When an iterator range for a primitive type (number, boolean, or string) is passed to a constructor or an erase function, this range has to be exactly (@ref begin(), @ref end()), because this is the only way the single stored value is expressed. All other ranges are invalid.
 json.exception.invalid_iterator.205 | iterator out of range | When an iterator for a primitive type (number, boolean, or string) is passed to an erase function, the iterator has to be the @ref begin() iterator, because it is the only way to address the stored value. All other iterators are invalid.
 json.exception.invalid_iterator.206 | cannot construct with iterators from null | The iterators passed to constructor @ref basic_json(InputIT first, InputIT last) belong to a JSON null value and hence to not define a valid range.
-json.exception.invalid_iterator.207 | cannot use key() for non-object iterators | The key() member function can only be used on iterators belonging to a JSON object, because other types do not have a concept of a key.
-json.exception.invalid_iterator.208 | cannot use operator[] for object iterators | The operator[] to specify a concrete offset cannot be used on iterators belonging to a JSON object, because JSON objects are unordered.
-json.exception.invalid_iterator.209 | cannot use offsets with object iterators | The offset operators (+, -, +=, -=) cannot be used on iterators belonging to a JSON object, because JSON objects are unordered.
+json.exception.invalid_iterator.207 | cannot bind key() for non-object iterators | The key() member function can only be used on iterators belonging to a JSON object, because other types do not have a concept of a key.
+json.exception.invalid_iterator.208 | cannot bind operator[] for object iterators | The operator[] to specify a concrete offset cannot be used on iterators belonging to a JSON object, because JSON objects are unordered.
+json.exception.invalid_iterator.209 | cannot bind offsets with object iterators | The offset operators (+, -, +=, -=) cannot be used on iterators belonging to a JSON object, because JSON objects are unordered.
 json.exception.invalid_iterator.210 | iterators do not fit | The iterator range passed to the insert function are not compatible, meaning they do not belong to the same container. Therefore, the range (@a first, @a last) is invalid.
 json.exception.invalid_iterator.211 | passed iterators may not belong to container | The iterator range passed to the insert function must not be a subrange of the container to insert to.
 json.exception.invalid_iterator.212 | cannot compare iterators of different containers | When two iterators are compared, they must belong to the same container.
@@ -3014,15 +3014,15 @@ name / id                     | example message | description
 json.exception.type_error.301 | cannot create object from initializer list | To create an object from an initializer list, the initializer list must consist only of a list of pairs whose first element is a string. When this constraint is violated, an array is created instead.
 json.exception.type_error.302 | type must be object, but is array | During implicit or explicit value conversion, the JSON type must be compatible to the target type. For instance, a JSON string can only be converted into string types, but not into numbers or boolean types.
 json.exception.type_error.303 | incompatible ReferenceType for get_ref, actual type is object | To retrieve a reference to a value stored in a @ref basic_json object with @ref get_ref, the type of the reference must match the value type. For instance, for a JSON array, the @a ReferenceType must be @ref array_t &.
-json.exception.type_error.304 | cannot use at() with string | The @ref at() member functions can only be executed for certain JSON types.
-json.exception.type_error.305 | cannot use operator[] with string | The @ref operator[] member functions can only be executed for certain JSON types.
-json.exception.type_error.306 | cannot use value() with string | The @ref value() member functions can only be executed for certain JSON types.
-json.exception.type_error.307 | cannot use erase() with string | The @ref erase() member functions can only be executed for certain JSON types.
-json.exception.type_error.308 | cannot use push_back() with string | The @ref push_back() and @ref operator+= member functions can only be executed for certain JSON types.
-json.exception.type_error.309 | cannot use insert() with | The @ref insert() member functions can only be executed for certain JSON types.
-json.exception.type_error.310 | cannot use swap() with number | The @ref swap() member functions can only be executed for certain JSON types.
-json.exception.type_error.311 | cannot use emplace_back() with string | The @ref emplace_back() member function can only be executed for certain JSON types.
-json.exception.type_error.312 | cannot use update() with string | The @ref update() member functions can only be executed for certain JSON types.
+json.exception.type_error.304 | cannot bind at() with string | The @ref at() member functions can only be executed for certain JSON types.
+json.exception.type_error.305 | cannot bind operator[] with string | The @ref operator[] member functions can only be executed for certain JSON types.
+json.exception.type_error.306 | cannot bind value() with string | The @ref value() member functions can only be executed for certain JSON types.
+json.exception.type_error.307 | cannot bind erase() with string | The @ref erase() member functions can only be executed for certain JSON types.
+json.exception.type_error.308 | cannot bind push_back() with string | The @ref push_back() and @ref operator+= member functions can only be executed for certain JSON types.
+json.exception.type_error.309 | cannot bind insert() with | The @ref insert() member functions can only be executed for certain JSON types.
+json.exception.type_error.310 | cannot bind swap() with number | The @ref swap() member functions can only be executed for certain JSON types.
+json.exception.type_error.311 | cannot bind emplace_back() with string | The @ref emplace_back() member function can only be executed for certain JSON types.
+json.exception.type_error.312 | cannot bind update() with string | The @ref update() member functions can only be executed for certain JSON types.
 json.exception.type_error.313 | invalid value to unflatten | The @ref unflatten function converts an object whose keys are JSON Pointers back into an arbitrary nested JSON value. The JSON Pointers must not overlap, because then the resulting value would not be well defined.
 json.exception.type_error.314 | only objects can be unflattened | The @ref unflatten function only works for an object whose keys are JSON Pointers.
 json.exception.type_error.315 | values in object must be primitive | The @ref unflatten function only works for an object whose keys are JSON Pointers and whose values are primitive.
@@ -5456,7 +5456,7 @@ enum class input_format_t { json, cbor, msgpack, ubjson, bson };
 
 #ifndef JSON_NO_IO
 /*!
-Input adapter for stdio file access. This adapter read only 1 byte and do not use any
+Input adapter for stdio file access. This adapter read only 1 byte and do not bind any
  buffer. This adapter is a very low level adapter.
 */
 class file_input_adapter
@@ -5491,7 +5491,7 @@ class file_input_adapter
 Input adapter for a (caching) istream. Ignores a UFT Byte Order Mark at
 beginning of input. Does not support changing the underlying std::streambuf
 in mid-input. Maintains underlying std::istream and std::streambuf to support
-subsequent use of standard std::istream operations to process any input
+subsequent bind of standard std::istream operations to process any input
 characters following those used in parsing the JSON input.  Clears the
 std::istream flags; any input errors (e.g., EOF) will be detected by the first
 subsequent call for input from the std::istream.
@@ -6661,10 +6661,10 @@ class lexer_base
         literal_true,     ///< the `true` literal
         literal_false,    ///< the `false` literal
         literal_null,     ///< the `null` literal
-        value_string,     ///< a string -- use get_string() for actual value
-        value_unsigned,   ///< an unsigned integer -- use get_number_unsigned() for actual value
-        value_integer,    ///< a signed integer -- use get_number_integer() for actual value
-        value_float,      ///< an floating point number -- use get_number_float() for actual value
+        value_string,     ///< a string -- bind get_string() for actual value
+        value_unsigned,   ///< an unsigned integer -- bind get_number_unsigned() for actual value
+        value_integer,    ///< a signed integer -- bind get_number_integer() for actual value
+        value_float,      ///< an floating point number -- bind get_number_float() for actual value
         begin_array,      ///< the character for array begin `[`
         begin_object,     ///< the character for object begin `{`
         end_array,        ///< the character for array end `]`
@@ -10858,7 +10858,7 @@ class binary_reader
     @param[in] format   the current format
     @param[in] detail   a detailed error message
     @param[in] context  further context information
-    @return a message string to use in the parse_error exceptions
+    @return a message string to bind in the parse_error exceptions
     */
     std::string exception_message(const input_format_t format,
                                   const std::string& detail,
@@ -12154,7 +12154,7 @@ class iter_impl
         switch (m_object->m_type)
         {
             case value_t::object:
-                JSON_THROW(invalid_iterator::create(209, "cannot use offsets with object iterators", *m_object));
+                JSON_THROW(invalid_iterator::create(209, "cannot bind offsets with object iterators", *m_object));
 
             case value_t::array:
             {
@@ -12233,7 +12233,7 @@ class iter_impl
         switch (m_object->m_type)
         {
             case value_t::object:
-                JSON_THROW(invalid_iterator::create(209, "cannot use offsets with object iterators", *m_object));
+                JSON_THROW(invalid_iterator::create(209, "cannot bind offsets with object iterators", *m_object));
 
             case value_t::array:
                 return m_it.array_iterator - other.m_it.array_iterator;
@@ -12262,7 +12262,7 @@ class iter_impl
         switch (m_object->m_type)
         {
             case value_t::object:
-                JSON_THROW(invalid_iterator::create(208, "cannot use operator[] for object iterators", *m_object));
+                JSON_THROW(invalid_iterator::create(208, "cannot bind operator[] for object iterators", *m_object));
 
             case value_t::array:
                 return *std::next(m_it.array_iterator, n);
@@ -12302,7 +12302,7 @@ class iter_impl
             return m_it.object_iterator->first;
         }
 
-        JSON_THROW(invalid_iterator::create(207, "cannot use key() for non-object iterators", *m_object));
+        JSON_THROW(invalid_iterator::create(207, "cannot bind key() for non-object iterators", *m_object));
     }
 
     /*!
@@ -14387,8 +14387,8 @@ class binary_writer
 
     /*!
     @param[in] j  JSON value to serialize
-    @param[in] use_count   whether to use '#' prefixes (optimized format)
-    @param[in] use_type    whether to use '$' prefixes (optimized format)
+    @param[in] use_count   whether to bind '#' prefixes (optimized format)
+    @param[in] use_type    whether to bind '$' prefixes (optimized format)
     @param[in] add_prefix  whether prefixes need to be used for this value
     */
     void write_ubjson(const BasicJsonType& j, const bool use_count,
@@ -16474,7 +16474,7 @@ class serializer
   public:
     /*!
     @param[in] s  output stream to serialize to
-    @param[in] ichar  indentation character to use
+    @param[in] ichar  indentation character to bind
     @param[in] error_handler_  how to react on decoding errors
     */
     serializer(output_adapter_t<char> s, const char ichar,
@@ -17402,7 +17402,7 @@ namespace nlohmann
 {
 
 /// ordered_map: a minimal map-like container that preserves insertion order
-/// for use within nlohmann::basic_json<ordered_map>
+/// for bind within nlohmann::basic_json<ordered_map>
 template <class Key, class T, class IgnoredLess = std::less<Key>,
           class Allocator = std::allocator<std::pair<const Key, T>>>
                   struct ordered_map : std::vector<std::pair<const Key, T>, Allocator>
@@ -17609,7 +17609,7 @@ default; will be used in @ref number_float_t)
 @tparam BinaryType type for packed binary data for compatibility with binary
 serialization formats (`std::vector<std::uint8_t>` by default; will be used in
 @ref binary_t)
-@tparam AllocatorType type of the allocator to use (`std::allocator` by
+@tparam AllocatorType type of the allocator to bind (`std::allocator` by
 default)
 @tparam JSONSerializer the serializer to resolve internal calls to `to_json()`
 and `from_json()` (@ref adl_serializer by default)
@@ -17780,7 +17780,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /////////////////////
 
     /// @name container types
-    /// The canonic container types to use @ref basic_json like any other STL
+    /// The canonic container types to bind @ref basic_json like any other STL
     /// container.
     /// @{
 
@@ -17941,7 +17941,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @tparam StringType the type of the keys or names (e.g., `std::string`).
     The comparison function `std::less<StringType>` is used to order elements
     inside the container.
-    @tparam AllocatorType the allocator to use for objects (e.g.,
+    @tparam AllocatorType the allocator to bind for objects (e.g.,
     `std::allocator`)
 
     #### Default type
@@ -18025,7 +18025,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
     @tparam ArrayType  container type to store arrays (e.g., `std::vector` or
     `std::list`)
-    @tparam AllocatorType allocator to use for arrays (e.g., `std::allocator`)
+    @tparam AllocatorType allocator to bind for arrays (e.g., `std::allocator`)
 
     #### Default type
 
@@ -18120,7 +18120,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     type which differentiates the two literals `true` and `false`.
 
     To store objects in C++, a type is defined by the template parameter @a
-    BooleanType which chooses the type to use.
+    BooleanType which chooses the type to bind.
 
     #### Default type
 
@@ -18158,7 +18158,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     number_unsigned_t and @ref number_float_t are used.
 
     To store integer numbers in C++, a type is defined by the template
-    parameter @a NumberIntegerType which chooses the type to use.
+    parameter @a NumberIntegerType which chooses the type to bind.
 
     #### Default type
 
@@ -18230,7 +18230,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     number_unsigned_t and @ref number_float_t are used.
 
     To store unsigned integer numbers in C++, a type is defined by the
-    template parameter @a NumberUnsignedType which chooses the type to use.
+    template parameter @a NumberUnsignedType which chooses the type to bind.
 
     #### Default type
 
@@ -18301,7 +18301,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     number_unsigned_t and @ref number_float_t are used.
 
     To store floating-point numbers in C++, a type is defined by the template
-    parameter @a NumberFloatType which chooses the type to use.
+    parameter @a NumberFloatType which chooses the type to bind.
 
     #### Default type
 
@@ -18361,7 +18361,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
     Additionally, as an implementation detail, the subtype of the binary data is
     carried around as a `std::uint8_t`, which is compatible with both of the
-    binary data formats that use binary subtyping, (though the specific
+    binary data formats that bind binary subtyping, (though the specific
     numbering is incompatible with each other, and it is up to the user to
     translate between them).
 
@@ -19185,9 +19185,9 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     With the rules described above, the following JSON values cannot be
     expressed by an initializer list:
 
-    - the empty array (`[]`): use @ref array(initializer_list_t)
+    - the empty array (`[]`): bind @ref array(initializer_list_t)
       with an empty initializer list in this case
-    - arrays whose elements satisfy rule 2: use @ref
+    - arrays whose elements satisfy rule 2: bind @ref
       array(initializer_list_t) with the same initializer list
       in this case
 
@@ -19204,7 +19204,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @ref object(initializer_list_t).
 
     @param[in] manual_type internal parameter; when @a type_deduction is set
-    to `false`, the created JSON value will use the provided type (only @ref
+    to `false`, the created JSON value will bind the provided type (only @ref
     value_t::array and @ref value_t::object are valid); when @a type_deduction
     is set to `true`, this parameter has no effect
 
@@ -19299,7 +19299,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     binary array type, for backwards compatibility and so it does not happen on
     accident.
 
-    @param[in] init container containing bytes to use as binary type
+    @param[in] init container containing bytes to bind as binary type
 
     @return JSON binary array value
 
@@ -19335,8 +19335,8 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     binary array type, for backwards compatibility and so it does not happen on
     accident.
 
-    @param[in] init container containing bytes to use as binary type
-    @param[in] subtype subtype to use in MessagePack and BSON
+    @param[in] init container containing bytes to bind as binary type
+    @param[in] subtype subtype to bind in MessagePack and BSON
 
     @return JSON binary array value
 
@@ -19880,7 +19880,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     members will be pretty-printed with that indent level. An indent level of
     `0` will only insert newlines. `-1` (the default) selects the most compact
     representation.
-    @param[in] indent_char The character to use for indentation if @a indent is
+    @param[in] indent_char The character to bind for indentation if @a indent is
     greater than `0`. The default is ` ` (space).
     @param[in] ensure_ascii If @a ensure_ascii is true, all non-ASCII characters
     in the output are escaped with `\uXXXX` sequences, and the result consists
@@ -20713,7 +20713,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // there is support for get<const basic_json_t>(), which is why we
         // still need the uncvref
         static_assert(!std::is_reference<ValueTypeCV>::value,
-                      "get() cannot be used with reference types, you might want to use get_ref()");
+                      "get() cannot be used with reference types, you might want to bind get_ref()");
         return get_impl<ValueType>(detail::priority_tag<4> {});
     }
 
@@ -21001,7 +21001,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(304, "cannot use at() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(304, "cannot bind at() with " + std::string(type_name()), *this));
         }
     }
 
@@ -21048,7 +21048,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(304, "cannot use at() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(304, "cannot bind at() with " + std::string(type_name()), *this));
         }
     }
 
@@ -21099,7 +21099,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(304, "cannot use at() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(304, "cannot bind at() with " + std::string(type_name()), *this));
         }
     }
 
@@ -21150,7 +21150,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(304, "cannot use at() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(304, "cannot bind at() with " + std::string(type_name()), *this));
         }
     }
 
@@ -21220,7 +21220,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return m_value.array->operator[](idx);
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a numeric argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a numeric argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21250,7 +21250,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return m_value.array->operator[](idx);
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a numeric argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a numeric argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21296,7 +21296,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return set_parent(m_value.object->operator[](key));
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a string argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a string argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21338,7 +21338,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return m_value.object->find(key)->second;
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a string argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a string argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21386,7 +21386,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return set_parent(m_value.object->operator[](key));
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a string argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a string argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21430,7 +21430,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return m_value.object->find(key)->second;
         }
 
-        JSON_THROW(type_error::create(305, "cannot use operator[] with a string argument with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(305, "cannot bind operator[] with a string argument with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21502,7 +21502,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return default_value;
         }
 
-        JSON_THROW(type_error::create(306, "cannot use value() with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(306, "cannot bind value() with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21575,7 +21575,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             }
         }
 
-        JSON_THROW(type_error::create(306, "cannot use value() with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(306, "cannot bind value() with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21693,7 +21693,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @post Invalidates iterators and references at or after the point of the
     erase, including the `end()` iterator.
 
-    @throw type_error.307 if called on a `null` value; example: `"cannot use
+    @throw type_error.307 if called on a `null` value; example: `"cannot bind
     erase() with null"`
     @throw invalid_iterator.202 if called on an iterator which does not belong
     to the current JSON value; example: `"iterator does not fit current
@@ -21783,7 +21783,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             case value_t::null:
             case value_t::discarded:
             default:
-                JSON_THROW(type_error::create(307, "cannot use erase() with " + std::string(type_name()), *this));
+                JSON_THROW(type_error::create(307, "cannot bind erase() with " + std::string(type_name()), *this));
         }
 
         return result;
@@ -21809,7 +21809,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @post Invalidates iterators and references at or after the point of the
     erase, including the `end()` iterator.
 
-    @throw type_error.307 if called on a `null` value; example: `"cannot use
+    @throw type_error.307 if called on a `null` value; example: `"cannot bind
     erase() with null"`
     @throw invalid_iterator.203 if called on iterators which does not belong
     to the current JSON value; example: `"iterators do not fit current value"`
@@ -21901,7 +21901,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             case value_t::null:
             case value_t::discarded:
             default:
-                JSON_THROW(type_error::create(307, "cannot use erase() with " + std::string(type_name()), *this));
+                JSON_THROW(type_error::create(307, "cannot bind erase() with " + std::string(type_name()), *this));
         }
 
         return result;
@@ -21922,7 +21922,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     Other references and iterators are not affected.
 
     @throw type_error.307 when called on a type other than JSON object;
-    example: `"cannot use erase() with null"`
+    example: `"cannot bind erase() with null"`
 
     @complexity `log(size()) + count(key)`
 
@@ -21944,7 +21944,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return m_value.object->erase(key);
         }
 
-        JSON_THROW(type_error::create(307, "cannot use erase() with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(307, "cannot bind erase() with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -21955,7 +21955,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] idx index of the element to remove
 
     @throw type_error.307 when called on a type other than JSON object;
-    example: `"cannot use erase() with null"`
+    example: `"cannot bind erase() with null"`
     @throw out_of_range.401 when `idx >= size()`; example: `"array index 17
     is out of range"`
 
@@ -21985,7 +21985,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(307, "cannot use erase() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(307, "cannot bind erase() with " + std::string(type_name()), *this));
         }
     }
 
@@ -22468,7 +22468,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
           element as string (see example).
 
     @param[in] ref  reference to a JSON value
-    @return iteration proxy object wrapping @a ref with an interface to use in
+    @return iteration proxy object wrapping @a ref with an interface to bind in
             range-based for loops
 
     @liveexample{The following code shows how the wrapper is used,iterator_wrapper}
@@ -22482,7 +22482,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     future.
 
     @deprecated This stream operator is deprecated and will be removed in
-                future 4.0.0 of the library. Please use @ref items() instead;
+                future 4.0.0 of the library. Please bind @ref items() instead;
                 that is, replace `json::iterator_wrapper(j)` with `j.items()`.
     */
     JSON_HEDLEY_DEPRECATED_FOR(3.1.0, items())
@@ -22536,7 +22536,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     }
     @endcode
 
-    The `items()` function also allows to use
+    The `items()` function also allows to bind
     [structured bindings](https://en.cppreference.com/w/cpp/language/structured_binding)
     (C++17):
 
@@ -22556,7 +22556,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
              <https://github.com/nlohmann/json/issues/2040> for more
              information.
 
-    @return iteration proxy object wrapping @a ref with an interface to use in
+    @return iteration proxy object wrapping @a ref with an interface to bind in
             range-based for loops
 
     @liveexample{The following code shows how the function is used.,items}
@@ -22939,7 +22939,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] val the value to add to the JSON array
 
     @throw type_error.308 when called on a type other than JSON array or
-    null; example: `"cannot use push_back() with number"`
+    null; example: `"cannot bind push_back() with number"`
 
     @complexity Amortized constant.
 
@@ -22954,7 +22954,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // push_back only works for null objects or arrays
         if (JSON_HEDLEY_UNLIKELY(!(is_null() || is_array())))
         {
-            JSON_THROW(type_error::create(308, "cannot use push_back() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(308, "cannot bind push_back() with " + std::string(type_name()), *this));
         }
 
         // transform null object into an array
@@ -22991,7 +22991,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // push_back only works for null objects or arrays
         if (JSON_HEDLEY_UNLIKELY(!(is_null() || is_array())))
         {
-            JSON_THROW(type_error::create(308, "cannot use push_back() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(308, "cannot bind push_back() with " + std::string(type_name()), *this));
         }
 
         // transform null object into an array
@@ -23028,7 +23028,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] val the value to add to the JSON object
 
     @throw type_error.308 when called on a type other than JSON object or
-    null; example: `"cannot use push_back() with number"`
+    null; example: `"cannot bind push_back() with number"`
 
     @complexity Logarithmic in the size of the container, O(log(`size()`)).
 
@@ -23043,7 +23043,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // push_back only works for null objects or objects
         if (JSON_HEDLEY_UNLIKELY(!(is_null() || is_object())))
         {
-            JSON_THROW(type_error::create(308, "cannot use push_back() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(308, "cannot bind push_back() with " + std::string(type_name()), *this));
         }
 
         // transform null object into an object
@@ -23072,7 +23072,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /*!
     @brief add an object to an object
 
-    This function allows to use `push_back` with an initializer list. In case
+    This function allows to bind `push_back` with an initializer list. In case
 
     1. the current value is an object,
     2. the initializer list @a init contains only two elements, and
@@ -23131,7 +23131,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @return reference to the inserted element
 
     @throw type_error.311 when called on a type other than JSON array or
-    null; example: `"cannot use emplace_back() with number"`
+    null; example: `"cannot bind emplace_back() with number"`
 
     @complexity Amortized constant.
 
@@ -23147,7 +23147,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // emplace_back only works for null objects or arrays
         if (JSON_HEDLEY_UNLIKELY(!(is_null() || is_array())))
         {
-            JSON_THROW(type_error::create(311, "cannot use emplace_back() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(311, "cannot bind emplace_back() with " + std::string(type_name()), *this));
         }
 
         // transform null object into an array
@@ -23180,7 +23180,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             denoting whether the insertion took place.
 
     @throw type_error.311 when called on a type other than JSON object or
-    null; example: `"cannot use emplace() with number"`
+    null; example: `"cannot bind emplace() with number"`
 
     @complexity Logarithmic in the size of the container, O(log(`size()`)).
 
@@ -23197,7 +23197,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // emplace only works for null objects or arrays
         if (JSON_HEDLEY_UNLIKELY(!(is_null() || is_object())))
         {
-            JSON_THROW(type_error::create(311, "cannot use emplace() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(311, "cannot bind emplace() with " + std::string(type_name()), *this));
         }
 
         // transform null object into an object
@@ -23252,7 +23252,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @return iterator pointing to the inserted @a val.
 
     @throw type_error.309 if called on JSON values other than arrays;
-    example: `"cannot use insert() with string"`
+    example: `"cannot bind insert() with string"`
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
 
@@ -23278,7 +23278,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return insert_iterator(pos, val);
         }
 
-        JSON_THROW(type_error::create(309, "cannot use insert() with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(309, "cannot bind insert() with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -23303,7 +23303,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     `cnt==0`
 
     @throw type_error.309 if called on JSON values other than arrays; example:
-    `"cannot use insert() with string"`
+    `"cannot bind insert() with string"`
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
 
@@ -23329,7 +23329,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             return insert_iterator(pos, cnt, val);
         }
 
-        JSON_THROW(type_error::create(309, "cannot use insert() with " + std::string(type_name()), *this));
+        JSON_THROW(type_error::create(309, "cannot bind insert() with " + std::string(type_name()), *this));
     }
 
     /*!
@@ -23343,7 +23343,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] last end of the range of elements to insert
 
     @throw type_error.309 if called on JSON values other than arrays; example:
-    `"cannot use insert() with string"`
+    `"cannot bind insert() with string"`
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
     @throw invalid_iterator.210 if @a first and @a last do not belong to the
@@ -23367,7 +23367,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // insert only works for arrays
         if (JSON_HEDLEY_UNLIKELY(!is_array()))
         {
-            JSON_THROW(type_error::create(309, "cannot use insert() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(309, "cannot bind insert() with " + std::string(type_name()), *this));
         }
 
         // check if iterator pos fits to this JSON value
@@ -23401,7 +23401,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] ilist initializer list to insert the values from
 
     @throw type_error.309 if called on JSON values other than arrays; example:
-    `"cannot use insert() with string"`
+    `"cannot bind insert() with string"`
     @throw invalid_iterator.202 if @a pos is not an iterator of *this;
     example: `"iterator does not fit current value"`
 
@@ -23420,7 +23420,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // insert only works for arrays
         if (JSON_HEDLEY_UNLIKELY(!is_array()))
         {
-            JSON_THROW(type_error::create(309, "cannot use insert() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(309, "cannot bind insert() with " + std::string(type_name()), *this));
         }
 
         // check if iterator pos fits to this JSON value
@@ -23442,7 +23442,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] last end of the range of elements to insert
 
     @throw type_error.309 if called on JSON values other than objects; example:
-    `"cannot use insert() with string"`
+    `"cannot bind insert() with string"`
     @throw invalid_iterator.202 if iterator @a first or @a last does does not
     point to an object; example: `"iterators first and last must point to
     objects"`
@@ -23461,7 +23461,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         // insert only works for objects
         if (JSON_HEDLEY_UNLIKELY(!is_object()))
         {
-            JSON_THROW(type_error::create(309, "cannot use insert() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(309, "cannot bind insert() with " + std::string(type_name()), *this));
         }
 
         // check if range iterators belong to the same JSON object
@@ -23487,7 +23487,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] j  JSON object to read values from
 
     @throw type_error.312 if called on JSON values other than objects; example:
-    `"cannot use update() with string"`
+    `"cannot bind update() with string"`
 
     @complexity O(N*log(size() + N)), where N is the number of elements to
                 insert.
@@ -23510,11 +23510,11 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
         if (JSON_HEDLEY_UNLIKELY(!is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(312, "cannot bind update() with " + std::string(type_name()), *this));
         }
         if (JSON_HEDLEY_UNLIKELY(!j.is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(j.type_name()), *this));
+            JSON_THROW(type_error::create(312, "cannot bind update() with " + std::string(j.type_name()), *this));
         }
 
         for (auto it = j.cbegin(); it != j.cend(); ++it)
@@ -23536,7 +23536,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in] last end of the range of elements to insert
 
     @throw type_error.312 if called on JSON values other than objects; example:
-    `"cannot use update() with string"`
+    `"cannot bind update() with string"`
     @throw invalid_iterator.202 if iterator @a first or @a last does does not
     point to an object; example: `"iterators first and last must point to
     objects"`
@@ -23564,7 +23564,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
         if (JSON_HEDLEY_UNLIKELY(!is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(312, "cannot bind update() with " + std::string(type_name()), *this));
         }
 
         // check if range iterators belong to the same JSON object
@@ -23660,7 +23660,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in,out] other array to exchange the contents with
 
     @throw type_error.310 when JSON value is not an array; example: `"cannot
-    use swap() with string"`
+    bind swap() with string"`
 
     @complexity Constant.
 
@@ -23678,7 +23678,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(310, "cannot use swap() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(310, "cannot bind swap() with " + std::string(type_name()), *this));
         }
     }
 
@@ -23693,7 +23693,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in,out] other object to exchange the contents with
 
     @throw type_error.310 when JSON value is not an object; example:
-    `"cannot use swap() with string"`
+    `"cannot bind swap() with string"`
 
     @complexity Constant.
 
@@ -23711,7 +23711,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(310, "cannot use swap() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(310, "cannot bind swap() with " + std::string(type_name()), *this));
         }
     }
 
@@ -23726,7 +23726,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in,out] other string to exchange the contents with
 
     @throw type_error.310 when JSON value is not a string; example: `"cannot
-    use swap() with boolean"`
+    bind swap() with boolean"`
 
     @complexity Constant.
 
@@ -23744,7 +23744,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(310, "cannot use swap() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(310, "cannot bind swap() with " + std::string(type_name()), *this));
         }
     }
 
@@ -23759,7 +23759,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     @param[in,out] other binary to exchange the contents with
 
     @throw type_error.310 when JSON value is not a string; example: `"cannot
-    use swap() with boolean"`
+    bind swap() with boolean"`
 
     @complexity Constant.
 
@@ -23777,7 +23777,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(310, "cannot use swap() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(310, "cannot bind swap() with " + std::string(type_name()), *this));
         }
     }
 
@@ -23791,7 +23791,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
         }
         else
         {
-            JSON_THROW(type_error::create(310, "cannot use swap() with " + std::string(type_name()), *this));
+            JSON_THROW(type_error::create(310, "cannot bind swap() with " + std::string(type_name()), *this));
         }
     }
 
@@ -24285,7 +24285,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 
     - The indentation character can be controlled with the member variable
       `fill` of the output stream @a o. For instance, the manipulator
-      `std::setfill('\\t')` sets indentation to use a tab character rather than
+      `std::setfill('\\t')` sets indentation to bind a tab character rather than
       the default space character.
 
     @param[in,out] o  stream to serialize to
@@ -24321,7 +24321,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /*!
     @brief serialize to stream
     @deprecated This stream operator is deprecated and will be removed in
-                future 4.0.0 of the library. Please use
+                future 4.0.0 of the library. Please bind
                 @ref operator<<(std::ostream&, const basic_json&)
                 instead; that is, replace calls like `j >> o;` with `o << j;`.
     @since version 1.0.0; deprecated since version 3.0.0
@@ -24593,7 +24593,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /*!
     @brief deserialize from stream
     @deprecated This stream operator is deprecated and will be removed in
-                version 4.0.0 of the library. Please use
+                version 4.0.0 of the library. Please bind
                 @ref operator>>(std::istream&, basic_json&)
                 instead; that is, replace calls like `j << i;` with `i >> j;`.
     @since version 1.0.0; deprecated since version 3.0.0
@@ -26389,7 +26389,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
     /*!
     @brief applies a JSON Merge Patch
 
-    The merge patch format is primarily intended for use with the HTTP PATCH
+    The merge patch format is primarily intended for bind with the HTTP PATCH
     method as a means of describing a set of modifications to a target
     resource's content. This function applies a merge patch to the current
     JSON value.

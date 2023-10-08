@@ -7,20 +7,14 @@ project (BanaCore
 )
 
 file(GLOB CORE_FILE core/*.cpp)
-file(GLOB TINY_GLTF
-        tinygltf/json.hpp
-        tinygltf/*.h
-)
 
-add_library(BanaCore SHARED
+add_library(BanaCore
         ${CORE_FILE}
-        ${TINY_GLTF}
         ${GLAD_C}
 )
 
 target_link_libraries(BanaCore PUBLIC
-#        GLAD
-#        tinygltf
+        tinygltf
 )
 
 target_include_directories(BanaCore

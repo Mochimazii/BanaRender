@@ -38,6 +38,26 @@ void Model::loadGLTF(const std::string &path) {
 
 void Model::init() {
     this->buildScenes();
+    this->_initialized = true;
+}
+
+const std::vector<std::shared_ptr<Scene>> &Model::GetScenes() const {
+    return _scenes;
+}
+
+void Model::drawCall() {
+    if (!_initialized) {
+        this->init();
+        _initialized = true;
+    }
+//    for (auto &scene : _scenes) {
+//        scene->traverse([](std::shared_ptr<Node> node) {
+//            auto mesh = node->getMesh();
+//            if (mesh) {
+//                mesh->drawCall();
+//            }
+//        });
+//    }
 }
 
 void Model::buildScenes() {
@@ -185,5 +205,6 @@ std::shared_ptr<Primitive> Model::buildPrimitive(unsigned int meshIndex,
     }
     return primitivePtr;
 }
+
 
 } // bana

@@ -175,7 +175,7 @@ int main()
 
     // tell opengl for each sampler to which texture unit it belongs to (only has to be done once)
     // -------------------------------------------------------------------------------------------
-    ourShader.use();
+    ourShader.bind();
     ourShader.setInt("texture1", 0);
     ourShader.setInt("texture2", 1);
 
@@ -207,7 +207,7 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
         // activate shader
-        ourShader.use();
+        ourShader.bind();
 
         if (rotate_on && (cur_mx != last_mx || cur_my != last_my)){
             glm::vec3 va = get_arcball_vector(last_mx, last_my);

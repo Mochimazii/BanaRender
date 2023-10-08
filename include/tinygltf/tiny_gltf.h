@@ -1474,7 +1474,7 @@ class TinyGLTF {
   void SetParseStrictness(ParseStrictness strictness);
 
   ///
-  /// Set callback to use for loading image data
+  /// Set callback to bind for loading image data
   ///
   void SetImageLoader(LoadImageDataFunction LoadImageData, void *user_data);
 
@@ -1484,17 +1484,17 @@ class TinyGLTF {
   void RemoveImageLoader();
 
   ///
-  /// Set callback to use for writing image data
+  /// Set callback to bind for writing image data
   ///
   void SetImageWriter(WriteImageDataFunction WriteImageData, void *user_data);
 
   ///
-  /// Set callbacks to use for URI encoding and decoding and their user data
+  /// Set callbacks to bind for URI encoding and decoding and their user data
   ///
   void SetURICallbacks(URICallbacks callbacks);
 
   ///
-  /// Set callbacks to use for filesystem (fs) access and their user data
+  /// Set callbacks to bind for filesystem (fs) access and their user data
   ///
   void SetFsCallbacks(FsCallbacks callbacks);
 
