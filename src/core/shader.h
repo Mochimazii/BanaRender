@@ -5,11 +5,11 @@
 #ifndef BANARENDER_SHADER_H
 #define BANARENDER_SHADER_H
 #include <string>
-#include <glad.h>
 #include <fstream>
 #include <sstream>
 #include <cassert>
 #include <iostream>
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 class Shader {

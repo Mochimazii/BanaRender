@@ -6,8 +6,8 @@
 #define BANARENDER_PRIMITIVE_H
 
 #include "macro.h"
-#include "glad.h"
 #include <memory>
+#include <glad/glad.h>
 
 namespace bana {
 
