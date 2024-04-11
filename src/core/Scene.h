@@ -1,30 +1,26 @@
 //
-// Created by akaring on 2023/8/29.
+// Created by akaring on 24-4-11.
 //
 
-#ifndef BANARENDER_CORE_SCENE_H_
-#define BANARENDER_CORE_SCENE_H_
+#ifndef SCENE_H
+#define SCENE_H
 
-#include <functional>
-#include "Node.h"
+#include <memory>
+#include <vector>
 
-namespace bana {
+class Model {
+};
 
-class Scene {
-
-private:
-    void traverseInternal(
-            const std::shared_ptr<Node> &node,
-            const std::function<void(std::shared_ptr<Node> node)> &nodeProcessor);
-    std::vector<std::shared_ptr<Node>> nodes_;
-
-public:
-    void addNode(const std::shared_ptr<Node> &node);
-    void traverse(
-            const std::function<void(std::shared_ptr<Node> node)> &nodeProcessor);
+class Light {
 
 };
 
-} // bana
+class Scene {
+public:
+    std::shared_ptr<Model> model;
+    std::shared_ptr<Light> light;
+};
 
-#endif //BANARENDER_CORE_SCENE_H_
+
+
+#endif //SCENE_H

@@ -31,7 +31,7 @@ include_directories(
         "${EXTERN_DIR}/assimp/contrib"
         "${EXTERN_DIR}/imgui"
         "${EXTERN_DIR}/stb/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/core"
 )
 
 # main src
