@@ -19,22 +19,11 @@ set(ASSIMP_BUILD_GLTF_IMPORTER TRUE)
 
 add_subdirectory(${EXTERN_DIR}/assimp)
 
-# GLAD
-#set(GLAD_C ${PROJECT_SOURCE_DIR}/include/glad/glad.c)
-#include_directories(include/glad)
-
 # GLFW
 find_package(glfw3 3.3 REQUIRED)
 
 # GLM
 find_package(GLM)
-
-# tinygltf
-#add_library(tinygltf)
-#target_sources(tinygltf PRIVATE
-#       include/tinygltf/tiny_gltf.cpp)
-#target_include_directories(tinygltf INTERFACE "include/tinygltf")
-
 
 include_directories(
         "${EXTERN_DIR}/glad/include"
@@ -66,8 +55,8 @@ target_link_libraries(BanaRender PRIVATE
         glfw
 )
 
-#add_executable(test test.cpp)
-#target_link_libraries(test PRIVATE
-#        BanaCore
-#        glfw
-#)
+# cinolib
+set(cinolib_DIR "${EXTERN_DIR}/cinolib")
+find_package(cinolib REQUIRED)
+add_executable(test test.cpp)
+target_link_libraries(test PRIVATE cinolib)

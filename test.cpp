@@ -1,4 +1,4 @@
-#include <glad.h>
+
 #include <GLFW/glfw3.h>
 #include "core/shader.h"
 #include <glm/glm.hpp>
@@ -7,7 +7,10 @@
 #include "core/camera.h"
 #include "core/Model.h"
 #include <iostream>
-#include <stb_image.h>
+#include <cinolib/meshes/meshes.h>
+#include <cinolib/gl/glcanvas.h>
+#include <cinolib/gl/surface_mesh_controls.h>
+
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
