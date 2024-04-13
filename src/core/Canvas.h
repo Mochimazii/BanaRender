@@ -4,29 +4,33 @@
 
 #ifndef CANVAS_H
 #define CANVAS_H
-#include <camera.h>
 #include <memory>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "camera.h"
 
 class Canvas {
 public:
     GLFWwindow *window;
+    unsigned int SCR_WIDTH;
+    unsigned int SCR_HEIGHT;
     std::shared_ptr<Camera> camera;
     glm::vec4 clear_color = {0.f, 0.f, 0.f, 0.f};
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    Canvas(int width, int height);
+    explicit Canvas(int width = 1000, int height = 800);
     ~Canvas();
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    int launch();
+    void draw_ui();
+    void draw_side_bar();
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    void draw();
-    void draw_side_bar();
+    int launch();
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

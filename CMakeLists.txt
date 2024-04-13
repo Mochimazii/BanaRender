@@ -28,10 +28,10 @@ find_package(GLM)
 include_directories(
         "${EXTERN_DIR}/glad/include"
         "${EXTERN_DIR}/assimp/include"
-        "${EXTERN_DIR}/assimp/contrib"
+#        "${EXTERN_DIR}/assimp/contrib"
         "${EXTERN_DIR}/imgui"
         "${EXTERN_DIR}/stb/include"
-        "${CMAKE_CURRENT_SOURCE_DIR}/src/core"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )
 
 # main src
@@ -41,16 +41,16 @@ file(GLOB MAIN_SRC
 
 # imgui src
 file(GLOB IMGUI_SRC
-        ${THIRD_PARTY_DIR}/imgui/imgui/*.cpp
+        ${EXTERN_DIR}/imgui/imgui/*.cpp
 )
 
 add_executable(BanaRender
         main.cpp
         ${MAIN_SRC}
         ${IMGUI_SRC}
+        ${EXTERN_DIR}/glad/src/glad.c
 )
 target_link_libraries(BanaRender PRIVATE
-        ${EXTERN}/glad/src/glad.c
         assimp
         glfw
 )

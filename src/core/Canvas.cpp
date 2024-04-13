@@ -3,12 +3,18 @@
 //
 
 #include "Canvas.h"
+
+#include <iostream>
+
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include <glad/glad.h>
 
 Canvas::Canvas(int width, int height) {
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
     // set camera
+
 
     // init GLFW, create window
     glfwInit();
@@ -29,20 +35,20 @@ Canvas::Canvas(int width, int height) {
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
     }
 
     // init ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    ImGuiIO &io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; // Enable Gamepad Controls
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 }
 
@@ -56,13 +62,47 @@ Canvas::~Canvas() {
     glfwTerminate();
 }
 
-int Canvas::launch() {
-}
+void Canvas::draw_ui() {
+    // Start the Dear ImGui frame
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
 
-void Canvas::draw() {
+    // Render Side Bar
+    draw_side_bar();
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
 void Canvas::draw_side_bar() {
+    ImGui::Begin("Side Bar",
+                 nullptr,
+                 ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize
+                     | ImGuiWindowFlags_AlwaysAutoResize);
+
+    // fps
+    ImGui::Separator();
+    ImGui::Text("fps: %.1f (%.2f ms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
+
+    // clear Color
+    ImGui::Separator();
+    ImGui::Text("clear color");
+    ImGui::ColorEdit4("clear color", (float *) &this->clear_color, ImGuiColorEditFlags_NoLabel);
+
+    ImGui::SetWindowPos(ImVec2(SCR_WIDTH - ImGui::GetWindowWidth(), 0));
+    ImGui::End();
+}
+
+int Canvas::launch() {
+    while (!glfwWindowShouldClose(window)) {
+        draw_ui();
+
+        glfwPollEvents();
+    }
+    return EXIT_SUCCESS;
 }
 
 void Canvas::window_size_event(GLFWwindow *w, int width, int height) {
