@@ -10,13 +10,26 @@
 
 #include "camera.h"
 
+struct Trackball
+{
+    glm::vec2 last_click_2d = glm::vec2(FLT_MAX);
+    glm::vec3 last_click_3d = glm::vec3(FLT_MAX);
+    bool  mouse_pressed = false;
+};
+
 class Canvas {
 public:
     GLFWwindow *window;
     unsigned int SCR_WIDTH;
     unsigned int SCR_HEIGHT;
-    std::shared_ptr<Camera> camera;
+
     glm::vec4 clear_color = {0.f, 0.f, 0.f, 0.f};
+
+
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    std::shared_ptr<Camera> camera;
+    Trackball               trackball;
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -30,7 +43,12 @@ public:
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    int launch();
+    glm::dvec2 cursor_pos() const;
+
+    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+    glm::vec3 trackball_to_sphere(const glm::vec2 &p, const double width, const double height, const double radius = 0.5);
+    void trackball_to_rotations(const glm::vec3 &p0, const glm::vec3 &p1, glm::vec3  &axis, double &angle, const double radius = 0.5);
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

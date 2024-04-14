@@ -26,8 +26,6 @@ const unsigned int SCR_HEIGHT = 600;
 // arcball control
 bool rotate_on = false;
 double last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
-// camera setting
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 
 int main()
 {
@@ -186,10 +184,10 @@ int main()
     ourShader.setInt("texture2", 1);
 
     // create transformations
-    glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    glm::mat4 view          = camera.get_view_matrix();
-    glm::mat4 projection    = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    // glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+    // glm::mat4 view          = camera.view_matrix();
+    // glm::mat4 projection    = glm::mat4(1.0f);
+    // projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
 
     // render loop
@@ -213,20 +211,24 @@ int main()
         // activate shader
         ourShader.bind();
 
-        if (rotate_on && (cur_mx != last_mx || cur_my != last_my)){
-            glm::vec3 va = get_arcball_vector(last_mx, last_my);
-            glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
-            //camera.restricted_rotate((last_mx - cur_mx)/SCR_WIDTH, (last_my - cur_my)/SCR_HEIGHT);
-            camera.arcball_rotate(vb, va);
-            view = camera.get_view_matrix();
-            last_mx = cur_mx;
-            last_my = cur_my;
-        }
+        // if (rotate_on && (cur_mx != last_mx || cur_my != last_my)){
+        //     glm::vec3 va = get_arcball_vector(last_mx, last_my);
+        //     glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
+        //     //camera.restricted_rotate((last_mx - cur_mx)/SCR_WIDTH, (last_my - cur_my)/SCR_HEIGHT);
+        //     camera.arcball_rotate(vb, va);
+        //     view = camera.get_view_matrix();
+        //     last_mx = cur_mx;
+        //     last_my = cur_my;
+        // }
 
         // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
-        ourShader.setMat4("model", model);
-        ourShader.setMat4("view", view);
-        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("model", canvas.camera->model_matrix());
+        ourShader.setMat4("view", canvas.camera->view_matrix());
+        ourShader.setMat4("projection", canvas.camera->projection_matrix());
+        // ourShader.setMat4("model", model);
+        // ourShader.setMat4("view", view);
+        // ourShader.setMat4("projection", projection);
+
 
         // render box
         glBindVertexArray(VAO);
