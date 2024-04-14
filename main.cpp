@@ -30,34 +30,6 @@ double last_mx = 0, last_my = 0, cur_mx = 0, cur_my = 0;
 int main()
 {
     Canvas canvas;
-    // glfw: initialize and configure
-    // ------------------------------
-    // glfwInit();
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    // glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    // glfw window creation
-    // --------------------
-    // GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    // if (window == NULL)
-    // {
-    //     std::cout << "Failed to create GLFW window" << std::endl;
-    //     glfwTerminate();
-    //     return -1;
-    // }
-    // glfwMakeContextCurrent(window);
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    // glfwSetMouseButtonCallback(window, mouse_button_callback);
-    // glfwSetCursorPosCallback(window, mouse_callback);
-
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    // if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    // {
-    //     std::cout << "Failed to initialize GLAD" << std::endl;
-    //     return -1;
-    // }
 
     glEnable(GL_DEPTH_TEST);
     // build and compile our shader program
@@ -183,13 +155,6 @@ int main()
     ourShader.setInt("texture1", 0);
     ourShader.setInt("texture2", 1);
 
-    // create transformations
-    // glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-    // glm::mat4 view          = camera.view_matrix();
-    // glm::mat4 projection    = glm::mat4(1.0f);
-    // projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(canvas.window))
@@ -211,23 +176,11 @@ int main()
         // activate shader
         ourShader.bind();
 
-        // if (rotate_on && (cur_mx != last_mx || cur_my != last_my)){
-        //     glm::vec3 va = get_arcball_vector(last_mx, last_my);
-        //     glm::vec3 vb = get_arcball_vector( cur_mx,  cur_my);
-        //     //camera.restricted_rotate((last_mx - cur_mx)/SCR_WIDTH, (last_my - cur_my)/SCR_HEIGHT);
-        //     camera.arcball_rotate(vb, va);
-        //     view = camera.get_view_matrix();
-        //     last_mx = cur_mx;
-        //     last_my = cur_my;
-        // }
-
         // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         ourShader.setMat4("model", canvas.camera->model_matrix());
         ourShader.setMat4("view", canvas.camera->view_matrix());
         ourShader.setMat4("projection", canvas.camera->projection_matrix());
-        // ourShader.setMat4("model", model);
-        // ourShader.setMat4("view", view);
-        // ourShader.setMat4("projection", projection);
+
 
 
         // render box
@@ -248,84 +201,4 @@ int main()
     // ------------------------------------------------------------------
     //glfwTerminate();
     return 0;
-}
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow *window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
-}
-// glfw: whenever the mouse moves, this callback is called
-// -------------------------------------------------------
-void mouse_button_callback(GLFWwindow *window, int button, int action, int mods){
-    switch (action) {
-        case GLFW_PRESS:
-        {
-            switch (button)
-            {
-                case GLFW_MOUSE_BUTTON_LEFT:
-                    std::cout << "arcball on" << std::endl;
-                    rotate_on = true;
-                    break;
-            }
-            double xpos, ypos;
-            glfwGetCursorPos(window, &xpos, &ypos);
-            last_mx = cur_mx = xpos;
-            last_my = cur_my = ypos;
-            break;
-        }
-        case GLFW_RELEASE:
-        {
-            switch (button) {
-                case GLFW_MOUSE_BUTTON_LEFT:
-                    std::cout << "arcball false" << std::endl;
-                    rotate_on = false;
-                    break;
-            }
-            break;
-        }
-        default:
-            break;
-    }
-}
-/**
- * 获取虚拟球中心点 O 到虚拟球表面上的点 P 的归一化向量
- * @param x 屏幕坐标 x
- * @param y 屏幕坐标 y
- * @return  向量 OP
- */
-glm::vec3 get_arcball_vector(double x, double y) {
-    glm::vec3 P = glm::vec3(1.0*x/SCR_WIDTH*2 - 1.0,
-                            1.0*y/SCR_HEIGHT*2 - 1.0,
-                            0);
-    P.y = -P.y;     // 屏幕坐标原点在左上角, y 轴从上向下递增, 与 NDC 空间相反
-    float OP_squared = P.x * P.x + P.y * P.y;
-    if (OP_squared <= 1*1)
-        P.z = sqrt(1*1 - OP_squared);
-    else
-        P = glm::normalize(P);  // 如果 (x,y) 距离球体太远，则返回虚拟球表面上最近的点
-    return P;
-}
-
-void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
-{
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (rotate_on){
-        cur_mx = xpos;
-        cur_my = ypos;
-    }
-
 }
