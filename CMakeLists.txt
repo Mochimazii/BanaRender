@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.25)
 project(BanaRender)
 
+set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
 set(EXTERN_DIR "${CMAKE_CURRENT_SOURCE_DIR}/extern")
@@ -22,14 +23,12 @@ add_subdirectory(${EXTERN_DIR}/assimp)
 # GLFW
 find_package(glfw3 3.3 REQUIRED)
 
-# GLM
-find_package(GLM)
-
 include_directories(
         "${EXTERN_DIR}/glad/include"
         "${EXTERN_DIR}/assimp/include"
 #        "${EXTERN_DIR}/assimp/contrib"
         "${EXTERN_DIR}/imgui"
+        "${EXTERN_DIR}/glm"
         "${EXTERN_DIR}/stb/include"
         "${CMAKE_CURRENT_SOURCE_DIR}/src"
 )

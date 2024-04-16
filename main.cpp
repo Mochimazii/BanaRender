@@ -14,11 +14,11 @@
 #include <iostream>
 
 
-void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
-glm::vec3 get_arcball_vector(double x, double y);
+// void mouse_button_callback(GLFWwindow *window, int button, int action, int mods);
+// void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+// void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+// void processInput(GLFWwindow *window);
+// glm::vec3 get_arcball_vector(double x, double y);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -161,7 +161,7 @@ int main()
     {
         // input
         // -----
-        processInput(canvas.window);
+        //processInput(canvas.window);
 
         // render
         // ------
