@@ -13,12 +13,12 @@
 #include <glm/glm.hpp>
 
 class Shader {
+public:
     unsigned int program_id;
     std::string vertex_shader_code;
     std::string fragment_shader_code;
     std::string geometry_shader_code;
 
-public:
     Shader() = default;
     Shader(const std::string& vertex_path, const std::string& fragment_path, const std::string& geometryPath = "");
     void bind();
