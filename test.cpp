@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <cinolib/gl/glcanvas.h>
+#include <cinolib/meshes/meshes.h>
 
 #include "core/Canvas.h"
 
